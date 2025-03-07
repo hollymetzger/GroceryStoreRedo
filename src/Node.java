@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+// The Node class works with the CustomQueue class to provide linked list functionality of storing some kind of data and a pointer to the next Node
 public class Node<T> {
     T data;
     Node<T> next;

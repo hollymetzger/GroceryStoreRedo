@@ -6,12 +6,13 @@ public class Simulation {
     private CustomQueue<SingleServerQueue> queues;
     private ArrivalProcess arrivalGenerator;
     private CustomQueue<Job> completedJobs;
+    public int jobsCompleted;
 
     public Simulation(ArrivalProcess arrivalGenerator, CustomQueue<SingleServerQueue> queues) {
         this.currentTime = 0.0;
         this.queues = queues;
         this.arrivalGenerator = arrivalGenerator;
-        this.completedJobs = new CustomQueue<>();
+        this.completedJobs = new CustomQueue<Job>();
     }
 
     public void run(double simulationTime) {
@@ -29,7 +30,7 @@ public class Simulation {
         Node<SingleServerQueue> current = queues.getHead();
         while (current != null) {
             SingleServerQueue queue = current.getData();
-            double endServiceTime = queue.getEndServiceTime();
+            double endServiceTime = queue.getNextEndServiceTime();
             if (endServiceTime < nextServiceCompletionTime) {
                 nextServiceCompletionTime = endServiceTime;
                 nextQueueToComplete = queue;
@@ -42,15 +43,44 @@ public class Simulation {
             // Process arrival
             currentTime = nextArrivalTime;
             Job newJob = arrivalGenerator.nextJob();
-            queues.getHead().getData().add(newJob, currentTime); // Add to the first queue for simplicity
+            newJob.setEntryTime(currentTime);
+            placeJob(newJob);
         } else {
             // Process service completion
             currentTime = nextServiceCompletionTime;
-            nextQueueToComplete.complete(currentTime);
+            completedJobs.enqueue(nextQueueToComplete.complete(currentTime));
+            jobsCompleted++;
         }
     }
 
-public static void doUnitTests() {
+    private void placeJob(Job job) {
+        // Add to the first queue for simplicity, option for greater functionality later
+        queues.getHead().getData().add(job, currentTime);
+    }
+
+
+    public static void testJobs() {
+        // create objects
+        ExponentialDistribution ed = new ExponentialDistribution(1.0);
+        ArrivalProcess arrivalGenerator = new ArrivalProcess(ed);
+        CustomQueue<SingleServerQueue> queues = new CustomQueue<>();
+        queues.enqueue(new SingleServerQueue(new NormalDistribution(0.0,1.0)));
+        Simulation simulation = new Simulation(arrivalGenerator, queues);
+
+        simulation.run(100);
+        System.out.println("Jobs completed: " + simulation.jobsCompleted);
+
+        Node current = simulation.completedJobs.getHead();
+        while (current != null) {
+            System.out.println(current.getData().getWaitingTime()); // grrrr idk how to fix this
+        }
+
+
+    }
+
+
+
+    public static void doUnitTests() {
             System.out.println("Running Simulation tests");
 
             // Mock objects for testing
@@ -91,7 +121,7 @@ public static void doUnitTests() {
                 writer.write("Test 2: Run simulation for 3.0 time units, " + (simulation.currentTime >= 3.0) + "\n");
 
                 // Test 3: Verify job completion and queue state
-                writer.write("Test 3: Verify job completion and queue state, " + (queue1.getEndServiceTime() != Double.POSITIVE_INFINITY || queue2.getEndServiceTime() != Double.POSITIVE_INFINITY) + "\n");
+                writer.write("Test 3: Verify job completion and queue state, " + (queue1.getNextEndServiceTime() != Double.POSITIVE_INFINITY || queue2.getNextEndServiceTime() != Double.POSITIVE_INFINITY) + "\n");
 
                 writer.close();
                 System.out.println("File created at " + file.getAbsolutePath());

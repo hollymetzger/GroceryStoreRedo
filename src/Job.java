@@ -4,6 +4,8 @@ import java.io.IOException;
 
 public class Job {
     private double serviceTime;
+    private double entryTime;
+    private double waitingTime;
 
     public Job(double serviceTime) {
         this.serviceTime = serviceTime;
@@ -11,6 +13,17 @@ public class Job {
 
     public double getServiceTime() {
         return serviceTime;
+    }
+    public double getWaitingTime() {
+        return waitingTime;
+    }
+
+    public void setEntryTime(double time) {
+        entryTime = time;
+    }
+
+    public void recordData(double currentTime) {
+        this.waitingTime = currentTime - this.entryTime;
     }
     
     public static void doUnitTests() {
