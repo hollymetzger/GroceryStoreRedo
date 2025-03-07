@@ -20,7 +20,6 @@ public class ArrivalProcess {
         return nextArrivalTime;
     }
 
-
         public static void doUnitTests() {
             System.out.println("Running Arrival Process tests");
 

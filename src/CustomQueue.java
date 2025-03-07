@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+// Provides linked list structure to model a queue
 public class CustomQueue<T> {
     private Node<T> head;
     private Node<T> tail;

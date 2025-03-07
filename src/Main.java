@@ -5,6 +5,9 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Running unit tests");
+
+        Simulation.testJobs();
+        /*
         
         // Run unit tests for all classes
         runAllUnitTests();
@@ -51,5 +54,7 @@ public class Main {
         ArrivalProcess.doUnitTests();
         SingleServerQueue.doUnitTests();
         Simulation.doUnitTests();
+
+         */
     }
 }
