@@ -3,6 +3,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 public class Simulation {
     private double currentTime;
+    private double nextArrivalTime;
+    private double nextCompletionTime;
     private CustomQueue<SingleServerQueue> queues;
     private ArrivalProcess arrivalGenerator;
     private CustomQueue<Job> completedJobs;
@@ -72,7 +74,7 @@ public class Simulation {
 
         Node current = simulation.completedJobs.getHead();
         while (current != null) {
-            System.out.println(current.getData().getWaitingTime()); // grrrr idk how to fix this
+            //System.out.println(current.getData().getWaitingTime()); // grrrr idk how to fix this
         }
 
 
