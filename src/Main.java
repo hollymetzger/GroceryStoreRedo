@@ -6,11 +6,11 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Running unit tests");
 
-        Simulation.testJobs();
-        /*
         
         // Run unit tests for all classes
         runAllUnitTests();
+
+        /*
 
         // Parameters for simulation
         double simulationTime = 3600; // 1-hour simulation
@@ -41,6 +41,8 @@ public class Main {
         Simulation simulation2 = new Simulation(arrivalProcess2, queue2);
         simulation2.run(simulationTime);
         System.out.println("Simulation completed for multiple checkouts with one person each.");
+
+         */
     }
 
     // Function to run all unit tests
@@ -55,6 +57,6 @@ public class Main {
         SingleServerQueue.doUnitTests();
         Simulation.doUnitTests();
 
-         */
+
     }
 }
