@@ -10,10 +10,10 @@ public class ArrivalProcess {
         this.nextArrivalTime = 0.0;
     }
 
-    public Job nextJob() {
+    public Customer nextJob(double currentTime, NormalDistribution numberOfItemsRNG) {
         double interArrivalTime = distribution.sample();
         nextArrivalTime += interArrivalTime;
-        return new Job(interArrivalTime);
+        return new Customer(numberOfItemsRNG, 1, 1, currentTime); // todo: need to add multipliers
     }
 
     public double getNextArrivalTime() {
@@ -30,6 +30,7 @@ public class ArrivalProcess {
                     return 1.0; // Fixed value for simplicity
                 }
             };
+            NormalDistribution numberOfItemsRNG = new NormalDistribution(10.0,5.0);
 
             ArrivalProcess arrivalProcess = new ArrivalProcess(mockDistribution);
 
@@ -42,11 +43,11 @@ public class ArrivalProcess {
                 writer.write("Test 1: Initial state, " + (arrivalProcess.getNextArrivalTime() == 0.0) + "\n");
 
                 // Test 2: Generate first job
-                arrivalProcess.nextJob();
+                arrivalProcess.nextJob(1, numberOfItemsRNG);
                 writer.write("Test 2: Generate first job, " + (arrivalProcess.getNextArrivalTime() == 1.0) + "\n");
 
                 // Test 3: Generate second job
-                arrivalProcess.nextJob();
+                arrivalProcess.nextJob(2, numberOfItemsRNG);
                 writer.write("Test 3: Generate second job, " + (arrivalProcess.getNextArrivalTime() == 2.0) + "\n");
 
                 writer.close();
