@@ -1,58 +1,49 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-public class Customer {
-    private double arrivalTime;
-    private double serviceTime;
-    private double departureTime;
+public class Customer extends Job {
 
-    public Customer(double arrivalTime, double serviceTime) {
-        this.arrivalTime = arrivalTime;
-        this.serviceTime = serviceTime;
-        this.departureTime = arrivalTime + serviceTime;
+    // Private variables
+    private int numberOfProducts;
+    private double aisleTime;
+
+    // Constructors
+    // Without service time
+    public Customer(NormalDistribution numberOfItemsRNG, double aisleMultiplier, double serviceMultiplier, double entryTime) {
+        super(entryTime);
+        numberOfProducts = Math.max(1, (int) numberOfItemsRNG.sample());
+        // the time a customer spends shopping and in service are set based on number of items
+        aisleTime = numberOfProducts * aisleMultiplier;
+        this.setServiceTime(numberOfProducts * serviceMultiplier);
     }
 
-    public double getArrivalTime() {
-        return arrivalTime;
+    // Accessors
+    public int getNumberOfProducts() {
+        return numberOfProducts;
+    }
+    public double getAisleTime() {
+        return aisleTime;
+    }
+    public String toString() {
+        return super.toString() +
+                " Numbert of products: " + numberOfProducts +
+                " Aisle time: " + aisleTime;
+
     }
 
-    public double getServiceTime() {
-        return serviceTime;
+    // Mutators
+    public void setQueueEntryTime() {
+        queueEntryTime = simEntryTime + serviceTime;
     }
 
-    public double getDepartureTime() {
-        return departureTime;
+    // Testing method
+    public static void doUnitTests() {
+        System.out.println("Running Customer tests");
+        NormalDistribution rng = new NormalDistribution(10, 5);
+
+        // Test 1: Customer creation and get methods
+        Customer customer = new Customer(rng, 1.0,1.0,1.0);
+        System.out.println("Number of products: " + customer.getNumberOfProducts());
+        System.out.println("Aisle time: " + customer.getAisleTime());
     }
-
-    public void setDepartureTime(double departureTime) {
-        this.departureTime = departureTime;
-    }
-
-
-        public static void doUnitTests() {
-            System.out.println("Running Customer tests");
-
-            // Create a log file for test results
-            try {
-                File file = new File("Customer Test Results.csv");
-                FileWriter writer = new FileWriter(file);
-
-                // Test 1: Customer creation and get methods
-                Customer customer = new Customer(1.0, 2.0);
-                writer.write("Test 1: Customer creation and getArrivalTime, " + (customer.getArrivalTime() == 1.0) + "\n");
-                writer.write("Test 1: Customer creation and getServiceTime, " + (customer.getServiceTime() == 2.0) + "\n");
-                writer.write("Test 1: Customer creation and getDepartureTime, " + (customer.getDepartureTime() == 3.0) + "\n");
-
-                // Test 2: setDepartureTime
-                customer.setDepartureTime(4.0);
-                writer.write("Test 2: setDepartureTime, " + (customer.getDepartureTime() == 4.0) + "\n");
-
-                writer.close();
-                System.out.println("File created at " + file.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
-
-        }
-    }
-
 }
